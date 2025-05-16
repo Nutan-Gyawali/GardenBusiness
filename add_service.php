@@ -46,7 +46,7 @@ if (empty($_SESSION['csrf_token'])) {
                     </div>
 
                     <div class="form-actions">
-                        <a href="services.php" class="btn btn-secondary">Cancel</a>
+                        <a href="index.php" class="btn btn-secondary">Cancel</a>
                         <button type="submit" class="btn btn-primary">Add Service</button>
                     </div>
                 </form>

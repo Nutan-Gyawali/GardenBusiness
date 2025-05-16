@@ -30,7 +30,7 @@
         <nav>
             <ul>
                 <!-- <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li> -->
-                <li><a href="services.php"><i class="fas fa-tools"></i> Services</a></li>
+                <li><a href="index.php"><i class="fas fa-tools"></i> Services</a></li>
                 <li><a href="bookings.php"><i class="fas fa-calendar-alt"></i> Bookings</a></li>
                 <li><a href="customers.php" class="active"><i class="fas fa-users"></i> Customers</a></li>
                

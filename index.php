@@ -26,7 +26,7 @@
         </div>
         <nav>
             <ul>
-            <li><a href="services.php" class="active"><i class="fas fa-tools"></i> Services</a></li>
+            <li><a href="index.php" class="active"><i class="fas fa-tools"></i> Services</a></li>
                 <li><a href="bookings.php"><i class="fas fa-calendar-alt"></i> Bookings</a></li>
                 <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
            
@@ -160,14 +160,14 @@
             // Close form button handling
             if (closeFormBtn) {
                 closeFormBtn.addEventListener("click", function() {
-                    window.location.href = "services.php";
+                    window.location.href = "index.php";
                 });
             }
 
             // Cancel form button handling
             if (cancelFormBtn) {
                 cancelFormBtn.addEventListener("click", function() {
-                    window.location.href = "services.php";
+                    window.location.href = "index.php";
                 });
             }
 

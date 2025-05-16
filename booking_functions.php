@@ -1,4 +1,6 @@
 <?php
+// session_start();  // Add session start at the top
+
 // Include database connection
 require_once 'config.php';
 
@@ -98,9 +100,19 @@ function deleteBooking($id)
     }
 }
 
+// Helper function to sanitize input
+// function sanitize($input)
+// {
+//     return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
+// }
+
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $response = [];
+
+    // Debug - log the received data
+    error_log("Booking action received: " . $_POST['action']);
+    error_log("POST data: " . print_r($_POST, true));
 
     // Sanitize inputs
     $id = isset($_POST['booking_id']) ? filter_var($_POST['booking_id'], FILTER_VALIDATE_INT) : null;
@@ -111,43 +123,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $status = sanitize($_POST['status'] ?? 'pending');
     $notes = sanitize($_POST['notes'] ?? null);
 
-    // Validate date format
-    if (!empty($bookingDate) && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $bookingDate)) {
-        $response = ['error' => 'Invalid date format. Use YYYY-MM-DD'];
-    }
-    // Validate time worked format
-    elseif ($timeWorked === false || $timeWorked === null) {
-        $response = ['error' => 'Invalid time format. Use decimal hours (e.g., 1.5 for 1 hour 30 minutes)'];
-    } else {
-        // Perform action based on form submission
-        switch ($_POST['action']) {
-            case 'add':
-                if (!$customerId || !$serviceId || empty($bookingDate) || $timeWorked === null) {
-                    $response = ['error' => 'Customer, service, date, and time worked are required'];
+    // Handle different actions
+    switch ($_POST['action']) {
+        case 'add':
+            if (!$customerId || !$serviceId || empty($bookingDate) || $timeWorked === null) {
+                $_SESSION['booking_error'] = 'Customer, service, date, and time worked are required';
+            } else {
+                $result = addBooking($customerId, $serviceId, $bookingDate, $timeWorked, $status, $notes);
+                if (isset($result['error'])) {
+                    $_SESSION['booking_error'] = $result['error'];
                 } else {
-                    $response = addBooking($customerId, $serviceId, $bookingDate, $timeWorked, $status, $notes);
+                    $_SESSION['booking_success'] = true;
                 }
-                break;
+            }
+            break;
 
-            case 'update':
-                if (!$id || !$customerId || !$serviceId || empty($bookingDate) || $timeWorked === null) {
-                    $response = ['error' => 'Booking ID, customer, service, date, and time worked are required'];
+        case 'update':
+            if (!$id || !$customerId || !$serviceId || empty($bookingDate) || $timeWorked === null) {
+                $_SESSION['booking_error'] = 'Booking ID, customer, service, date, and time worked are required';
+            } else {
+                $result = updateBooking($id, $customerId, $serviceId, $bookingDate, $timeWorked, $status, $notes);
+                if (isset($result['error'])) {
+                    $_SESSION['booking_error'] = $result['error'];
                 } else {
-                    $response = updateBooking($id, $customerId, $serviceId, $bookingDate, $timeWorked, $status, $notes);
+                    $_SESSION['booking_success'] = true;
                 }
-                break;
+            }
+            break;
 
-            case 'delete':
-                if (!$id) {
-                    $response = ['error' => 'Invalid booking ID'];
+        case 'delete':
+            if (!$id) {
+                $_SESSION['booking_error'] = 'Invalid booking ID';
+                error_log("Delete failed: Invalid booking ID");
+            } else {
+                $result = deleteBooking($id);
+                if (isset($result['error'])) {
+                    $_SESSION['booking_error'] = $result['error'];
+                    error_log("Delete failed: " . $result['error']);
                 } else {
-                    $response = deleteBooking($id);
+                    $_SESSION['booking_success'] = true;
+                    error_log("Delete successful for booking ID: $id");
                 }
-                break;
+            }
+            break;
 
-            default:
-                $response = ['error' => 'Invalid action'];
-        }
+        default:
+            $_SESSION['booking_error'] = 'Invalid action';
     }
 
     // Return JSON response for AJAX requests
@@ -157,7 +178,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         exit;
     }
 
-    // Redirect for regular form submissions
+    // Redirect back to bookings page for regular form submissions
+    header('Location: bookings.php');
+    exit;
+}
+
+// If this file is accessed directly without a form submission
+if (basename($_SERVER['SCRIPT_FILENAME']) == basename(__FILE__)) {
+    // This means the file was accessed directly, redirect to bookings.php
     header('Location: bookings.php');
     exit;
 }

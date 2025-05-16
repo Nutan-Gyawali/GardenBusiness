@@ -1,6 +1,7 @@
 <?php
+session_start(); // Start session at the top
 require_once 'config.php'; // contains $pdo
-require_once 'booking_functions.php'; // your code above
+require_once 'booking_functions.php'; // your booking functions
 
 $customers = $pdo->query("SELECT customer_id, customer_name FROM customers")->fetchAll();
 $services = $pdo->query("SELECT service_id, service_name FROM services")->fetchAll();
@@ -9,6 +10,18 @@ $bookings = getAllBookings();
 $editBooking = null;
 if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
     $editBooking = getBookingById($_GET['edit']);
+}
+
+// Display error or success messages if they exist in session
+$errorMessage = $_SESSION['booking_error'] ?? null;
+$successMessage = $_SESSION['booking_success'] ?? false;
+
+// Clear messages after displaying them
+if (isset($_SESSION['booking_error'])) {
+    unset($_SESSION['booking_error']);
+}
+if (isset($_SESSION['booking_success'])) {
+    unset($_SESSION['booking_success']);
 }
 ?>
 
@@ -26,20 +39,6 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 </head>
 
 <body>
-    <?php
-    require_once 'config.php';
-    require_once 'booking_functions.php';
-
-    $customers = $pdo->query("SELECT customer_id, customer_name FROM customers")->fetchAll();
-    $services = $pdo->query("SELECT service_id, service_name FROM services")->fetchAll();
-    $bookings = getAllBookings();
-
-    $editBooking = null;
-    if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-        $editBooking = getBookingById($_GET['edit']);
-    }
-    ?>
-
     <div class="sidebar">
         <div class="logo">
             <i class="fas fa-leaf"></i>
@@ -47,10 +46,9 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         </div>
         <nav>
             <ul>
-            <li><a href="services.php"><i class="fas fa-tools"></i> Services</a></li>
+                <li><a href="index.php"><i class="fas fa-tools"></i> Services</a></li>
                 <li><a href="bookings.php" class="active"><i class="fas fa-calendar-alt"></i> Bookings</a></li>
                 <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
-
             </ul>
         </nav>
     </div>
@@ -68,6 +66,18 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         </header>
 
         <div class="content-container">
+            <?php if ($errorMessage): ?>
+                <div class="alert alert-error">
+                    <i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($errorMessage) ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($successMessage): ?>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> Booking operation completed successfully!
+                </div>
+            <?php endif; ?>
+
             <div class="page-header">
                 <h2>Manage Bookings</h2>
                 <button class="btn btn-primary" id="show-add-form">
@@ -213,6 +223,16 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
             const closeFormBtn = document.getElementById("close-form");
             const cancelFormBtn = document.getElementById("cancel-form");
             const showAddFormBtn = document.getElementById("show-add-form");
+
+            // Auto-hide alert messages after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            if (alerts.length > 0) {
+                setTimeout(function() {
+                    alerts.forEach(function(alert) {
+                        alert.style.display = 'none';
+                    });
+                }, 5000);
+            }
 
             // Show Add Form button handling
             if (showAddFormBtn) {
