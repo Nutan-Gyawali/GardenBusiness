@@ -1,84 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services - GreenThumb Garden Services</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/cs
-
-pasted
-
-I'll analyze this file for you. It appears to be an HTML page for managing services in a garden services management system called " GreenThumb Garden Services".
-
-        Overview of the File
-        This is a PHP and HTML page (services.php) that manages garden services. It includes functionality to:
-
-        View all services in a card-based layout
-        Add new services
-        Edit existing services
-        Delete services
-        Each service has:
-
-        Name
-        Price per hour
-        Description (optional)
-        Auto-assigned icon based on service name keywords
-        Key Components
-        Structure
-        Sidebar navigation with links to Dashboard, Bookings, Customers, and Services
-        Main content area with a header and service management functionality
-        Form for adding/editing services
-        Grid display of existing services
-        Functionality
-        PHP backend integration with service_functions.php
-        Form validation using JavaScript
-        Responsive design with sidebar toggle
-        Automatic icon selection based on service name
-        Issues in the Code
-        I noticed a few issues that should be addressed:
-
-        JavaScript Error: There's a duplicate variable declaration - closeFormBtn and serviceForm are declared twice.
-        Missing Element: The code references a button with ID "show-add-form" , but it doesn't appear to be defined in the HTML.
-        Security Concerns: While the code uses htmlspecialchars() for output sanitization, you should ensure the service_functions.php file properly validates and sanitizes inputs.
-        Recommended Improvements
-        Would you like me to:
-
-        Fix the JavaScript errors?
-        Improve form validation?
-        Add missing elements?
-        Make any design improvements?
-        Or would you prefer a particular aspect of this code to focus on?
-
-
-
-
-        fix the errors
-
-        I'll fix the errors in the code. The main issues are in the JavaScript section where there are duplicate variable declarations and a missing UI element.
-
-
-        Fixed services.php
-        Code
-        I've fixed all the errors in the code. Here are the specific changes I made:
-
-        1. Fixed the JavaScript section
-        The original code had several issues in the JavaScript section:
-
-        Duplicate variable declarations for closeFormBtn and serviceForm
-        The event handler for the "Add Service" button wasn't working properly
-        The variables were scattered throughout the code making it harder to maintain
-        2. Added the missing ID to the "Add Service" button
-        Added id="show-add-form" to the "Add Service" link to make it selectable by JavaScript
-        This ensures the button click event handler can find and attach to the proper element
-        3. Fixed a formatting issue in the price display
-        Removed an extra curly brace in the price display: Cha
-
-
-
-        <!DOCTYPE html>
+ <!DOCTYPE html>
     <html lang="en">
-
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -105,10 +26,10 @@ I'll analyze this file for you. It appears to be an HTML page for managing servi
         </div>
         <nav>
             <ul>
-                <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="services.php" class="active"><i class="fas fa-tools"></i> Services</a></li>
                 <li><a href="bookings.php"><i class="fas fa-calendar-alt"></i> Bookings</a></li>
                 <li><a href="customers.php"><i class="fas fa-users"></i> Customers</a></li>
-                <li><a href="services.php" class="active"><i class="fas fa-tools"></i> Services</a></li>
+           
             </ul>
         </nav>
     </div>
@@ -298,7 +219,7 @@ I'll analyze this file for you. It appears to be an HTML page for managing servi
             }
         });
     </script>
-    <script src="js/script.js"></script>
+   
 </body>
 
 </html>

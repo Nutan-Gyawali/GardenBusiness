@@ -7,6 +7,8 @@
     <title>Add Customer - GreenThumb</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/bookings.css">
+    <link rel="stylesheet" href="css/common.css">
+
 </head>
 
 <body>

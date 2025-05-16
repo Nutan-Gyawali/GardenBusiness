@@ -7,6 +7,8 @@
     <title>Customers - GreenThumb Garden Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/services.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/bookings.css">
 </head>
 
 <body>
@@ -27,10 +29,11 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+                <!-- <li><a href="index.php"><i class="fas fa-home"></i> Dashboard</a></li> -->
+                <li><a href="services.php"><i class="fas fa-tools"></i> Services</a></li>
                 <li><a href="bookings.php"><i class="fas fa-calendar-alt"></i> Bookings</a></li>
                 <li><a href="customers.php" class="active"><i class="fas fa-users"></i> Customers</a></li>
-                <li><a href="services.php"><i class="fas fa-tools"></i> Services</a></li>
+               
             </ul>
         </nav>
     </div>
@@ -104,13 +107,13 @@
             </div>
 
             <!-- Customers Table -->
-            <div class="card">
+            <div class="cards">
                 <div class="card-body">
                     <div class="search-container">
                         <input type="text" id="customerSearch" class="search-input" placeholder="Search customers...">
                         <i class="fas fa-search search-icon"></i>
                     </div>
-                    <div class="table-container">
+                    
                         <table class="data-table" id="customersTable">
                             <thead>
                                 <tr>
@@ -152,7 +155,7 @@
                                 <?php endif; ?>
                             </tbody>
                         </table>
-                    </div>
+                    
                 </div>
             </div>
         </div>
