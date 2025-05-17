@@ -33,7 +33,7 @@
                 <li><a href="index.php"><i class="fas fa-tools"></i> Services</a></li>
                 <li><a href="bookings.php"><i class="fas fa-calendar-alt"></i> Bookings</a></li>
                 <li><a href="customers.php" class="active"><i class="fas fa-users"></i> Customers</a></li>
-               
+
             </ul>
         </nav>
     </div>
@@ -113,49 +113,49 @@
                         <input type="text" id="customerSearch" class="search-input" placeholder="Search customers...">
                         <i class="fas fa-search search-icon"></i>
                     </div>
-                    
-                        <table class="data-table" id="customersTable">
-                            <thead>
+
+                    <table class="data-table" id="customersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (isset($customers['error'])): ?>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Address</th>
-                                    <th>Phone</th>
-                                    <th>Email</th>
-                                    <th>Actions</th>
+                                    <td colspan="6" class="no-data">Error: <?php echo htmlspecialchars($customers['error']); ?></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (isset($customers['error'])): ?>
+                            <?php elseif (empty($customers)): ?>
+                                <tr>
+                                    <td colspan="6" class="no-data">No customers found</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($customers as $customer): ?>
                                     <tr>
-                                        <td colspan="6" class="no-data">Error: <?php echo htmlspecialchars($customers['error']); ?></td>
+                                        <td><?php echo htmlspecialchars($customer['customer_id']); ?></td>
+                                        <td><?php echo htmlspecialchars($customer['customer_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($customer['address']); ?></td>
+                                        <td><?php echo htmlspecialchars($customer['phone']); ?></td>
+                                        <td><?php echo htmlspecialchars($customer['email'] ?? ''); ?></td>
+                                        <td class="actions">
+                                            <a href="?edit=<?php echo $customer['customer_id']; ?>" class="btn-icon edit" title="Edit"><i class="fas fa-edit"></i></a>
+                                            <form method="POST" action="customer_functions.php" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this customer?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="customer_id" value="<?php echo $customer['customer_id']; ?>">
+                                                <button type="submit" class="btn-icon delete" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                                            </form>
+                                        </td>
                                     </tr>
-                                <?php elseif (empty($customers)): ?>
-                                    <tr>
-                                        <td colspan="6" class="no-data">No customers found</td>
-                                    </tr>
-                                <?php else: ?>
-                                    <?php foreach ($customers as $customer): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($customer['customer_id']); ?></td>
-                                            <td><?php echo htmlspecialchars($customer['customer_name']); ?></td>
-                                            <td><?php echo htmlspecialchars($customer['address']); ?></td>
-                                            <td><?php echo htmlspecialchars($customer['phone']); ?></td>
-                                            <td><?php echo htmlspecialchars($customer['email'] ?? ''); ?></td>
-                                            <td class="actions">
-                                                <a href="?edit=<?php echo $customer['customer_id']; ?>" class="btn-icon edit" title="Edit"><i class="fas fa-edit"></i></a>
-                                                <form method="POST" action="customer_functions.php" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this customer?');">
-                                                    <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="customer_id" value="<?php echo $customer['customer_id']; ?>">
-                                                    <button type="submit" class="btn-icon delete" title="Delete"><i class="fas fa-trash-alt"></i></button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>
@@ -230,18 +230,6 @@
                 if (phone === "") {
                     document.getElementById("phone-error").textContent = "Phone number is required";
                     isValid = false;
-                } else {
-                    // Remove all non-digit characters to check actual digit count
-                    const digitsOnly = phone.replace(/\D/g, '');
-
-                    if (digitsOnly.length !== 10) {
-                        document.getElementById("phone-error").textContent = "Phone number must contain exactly 10 digits";
-                        isValid = false;
-                    } else if (!/^(?:\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/.test(phone) &&
-                        !/^\d{10}$/.test(phone)) {
-                        document.getElementById("phone-error").textContent = "Please use a valid format: 1234567890, 123-456-7890, (123) 456-7890";
-                        isValid = false;
-                    }
                 }
 
                 // Validate email format (if provided)

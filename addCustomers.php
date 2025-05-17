@@ -89,9 +89,6 @@
             if (phone === "") {
                 document.getElementById("phone-error").textContent = "Phone number is required";
                 isValid = false;
-            } else if (!/^\d{10}$/.test(phone)) {
-                document.getElementById("phone-error").textContent = "Phone number must be 10 digits";
-                isValid = false;
             }
 
             // Validate email format (if provided)
