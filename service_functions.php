@@ -52,7 +52,16 @@ function updateService($id, $name, $price, $description = null)
         return ['error' => 'Error updating service: ' . $e->getMessage()];
     }
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+    $id = $_POST['service_id'] ?? null;
 
+    if ($action === 'delete' && $id) {
+        $response = deleteService($id);
+        header("Location: index.php");
+        exit;
+    }
+}
 // Function to delete a service
 function deleteService($id)
 {
@@ -62,9 +71,11 @@ function deleteService($id)
         $stmt->execute([$id]);
         return ['success' => true];
     } catch (PDOException $e) {
+        error_log('Delete Error: ' . $e->getMessage());
         return ['error' => 'Error deleting service: ' . $e->getMessage()];
     }
 }
+
 
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
